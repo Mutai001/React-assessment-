@@ -1,41 +1,60 @@
-import React, { useReducer } from 'react';
-import { todoReducer } from '../hooks/Reducer';
-import { Todo, Action } from '../hooks/types';
+import React, { useReducer, useState } from 'react';
 import Header from '../components/Header';
 import TodoInput from '../components/TodoInput';
-import TodoList from '../components/TodoList';
-import '../styles/TodoApp.scss';
+// import TodoList from '../components/TodoList';
+// import 'App.scss';
+import '../styles/App.scss';
 
-const TodoApp: React.FC = () => {
-  const [todos, dispatch] = useReducer<React.Reducer<Todo[], Action>>(todoReducer, [
-    { text: 'Complete online JavaScript course', completed: true },
-    { text: 'Jog around the park 3x', completed: false },
-    { text: '10 minutes meditation', completed: false },
-    { text: 'Read for 1 hour', completed: false },
-    { text: 'Pick up groceries', completed: false },
-    { text: 'Complete Todo App on Frontend Mentor', completed: false },
-  ]);
+interface TodoAPP {
+  id: number;
+  text: string;
+  completed: boolean;
+}
 
-  const addTodo = (text: string) => dispatch({ type: 'ADD_TODO', text });
-  const toggleTodo = (index: number) => dispatch({ type: 'TOGGLE_TODO', index });
-  const clearCompleted = () => dispatch({ type: 'CLEAR_COMPLETED' });
+type ActionType = 
+  | { type: 'ADD_TODO'; text: string }
+  | { type: 'TOGGLE_TODO'; id: number }
+  | { type: 'CLEAR_COMPLETED' };
+
+const reducer = (state: TodoAPP[], action: ActionType): TodoAPP[] => {
+  switch (action.type) {
+    case 'ADD_TODO':
+      return [...state, { id: Date.now(), text: action.text, completed: false }];
+    case 'TOGGLE_TODO':
+      return state.map(todo =>
+        todo.id === action.id ? { ...todo, completed: !todo.completed } : todo
+      );
+    case 'CLEAR_COMPLETED':
+      return state.filter(todo => !todo.completed);
+    default:
+      return state;
+  }
+};
+
+const App: React.FC = () => {
+  const [, dispatch] = useReducer(reducer, []);
+  const [inputValue, setInputValue] = useState('');
 
   return (
-    <div className="todo-app">
+    <div className="app">
       <Header />
-      <TodoInput addTodo={addTodo} />
-      <TodoList todos={todos} toggleTodo={toggleTodo} />
-      <div className="footer">
-        <span>{todos.filter(todo => !todo.completed).length} items left</span>
-        <div className="filters">
-          <button>All</button>
-          <button>Active</button>
-          <button>Completed</button>
-        </div>
-        <button onClick={clearCompleted}>Clear Completed</button>
-      </div>
+      <TodoInput
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        addTodo={() => {
+          dispatch({ type: 'ADD_TODO', text: inputValue });
+          setInputValue('');
+        }}
+      />
+      {/* <TodoList
+        todos={state}
+        toggleTodo={(id: number) => dispatch({ type: 'TOGGLE_TODO', id })}
+      /> */}
+      <button onClick={() => dispatch({ type: 'CLEAR_COMPLETED' })}>
+        Clear Completed
+      </button>
     </div>
   );
 };
 
-export default TodoApp;
+export default App;

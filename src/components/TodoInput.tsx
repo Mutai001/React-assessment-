@@ -1,30 +1,22 @@
-import React, { useState } from 'react';
-import './styles/TodoInput.scss';
+import React from 'react';
+import '../styles/TodoInput.scss';
 
 interface Props {
-  addTodo: (text: string) => void;
+  inputValue: string;
+  setInputValue: React.Dispatch<React.SetStateAction<string>>;
+  addTodo: () => void;
 }
 
-const TodoInput: React.FC<Props> = ({ addTodo }) => {
-  const [input, setInput] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (input.trim()) {
-      addTodo(input);
-      setInput('');
-    }
-  };
-
+const TodoInput: React.FC<Props> = ({ inputValue, setInputValue, addTodo }) => {
   return (
-    <form className="todo-input" onSubmit={handleSubmit}>
+    <div className="todo-input">
       <input
         type="text"
-        placeholder="Create a new todo..."
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
       />
-    </form>
+      <button onClick={addTodo}>Add Todo</button>
+    </div>
   );
 };
 

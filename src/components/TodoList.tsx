@@ -4,15 +4,15 @@ import { Todo } from '../hooks/types';
 import './TodoList.scss';
 
 interface Props {
-  todos: Todo[];
-  toggleTodo: (index: number) => void;
+  todos: (Todo & { id: number })[]; // Add 'id' property to the 'Todo' type
+  toggleTodo: (id: number) => void;
 }
 
 const TodoList: React.FC<Props> = ({ todos, toggleTodo }) => {
   return (
     <div className="todo-list">
-      {todos.map((todo, index) => (
-        <TodoItem key={index} todo={todo} toggleTodo={() => toggleTodo(index)} />
+      {todos.map((todo) => (
+        <TodoItem key={todo.id} todo={todo} toggleTodo={() => toggleTodo(todo.id)} />
       ))}
     </div>
   );
