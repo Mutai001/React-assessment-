@@ -1,17 +1,18 @@
 import React from 'react';
 import TodoItem from './TodoItem';
+import { Todo } from '../hooks/types';
+import './TodoList.scss';
 
-type TodoListProps = {
+interface Props {
   todos: Todo[];
-  onToggle: (id: number) => void;
-  onDelete: (id: number) => void;
-};
+  toggleTodo: (index: number) => void;
+}
 
-const TodoList: React.FC<TodoListProps> = ({ todos, onToggle, onDelete }) => {
+const TodoList: React.FC<Props> = ({ todos, toggleTodo }) => {
   return (
     <div className="todo-list">
-      {todos.map((todo) => (
-        <TodoItem key={todo.id} todo={todo} onToggle={onToggle} onDelete={onDelete} />
+      {todos.map((todo, index) => (
+        <TodoItem key={index} todo={todo} toggleTodo={() => toggleTodo(index)} />
       ))}
     </div>
   );

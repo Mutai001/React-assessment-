@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
+import './styles/TodoInput.scss';
 
-type TodoInputProps = {
-  onAdd: (text: string) => void;
-};
+interface Props {
+  addTodo: (text: string) => void;
+}
 
-const TodoInput: React.FC<TodoInputProps> = ({ onAdd }) => {
-  const [text, setText] = useState('');
+const TodoInput: React.FC<Props> = ({ addTodo }) => {
+  const [input, setInput] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (text.trim()) {
-      onAdd(text);
-      setText('');
+    if (input.trim()) {
+      addTodo(input);
+      setInput('');
     }
   };
 
@@ -19,11 +20,10 @@ const TodoInput: React.FC<TodoInputProps> = ({ onAdd }) => {
     <form className="todo-input" onSubmit={handleSubmit}>
       <input
         type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Add a new task"
+        placeholder="Create a new todo..."
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
       />
-      <button type="submit">Add</button>
     </form>
   );
 };

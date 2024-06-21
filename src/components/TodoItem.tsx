@@ -1,16 +1,19 @@
 import React from 'react';
+import './styles/TodoItem.scss';
 
-type TodoItemProps = {
-  todo: Todo;
-  onToggle: (id: number) => void;
-  onDelete: (id: number) => void;
-};
+interface Props {
+  todo: {
+    text: string;
+    completed: boolean;
+  };
+  toggleTodo: () => void;
+}
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggle, onDelete }) => {
+const TodoItem: React.FC<Props> = ({ todo, toggleTodo }) => {
   return (
-    <div className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-      <span onClick={() => onToggle(todo.id)}>{todo.text}</span>
-      <button onClick={() => onDelete(todo.id)}>Delete</button>
+    <div className={`todo-item ${todo.completed ? 'completed' : ''}`} onClick={toggleTodo}>
+      <input type="checkbox" checked={todo.completed} readOnly />
+      <span>{todo.text}</span>
     </div>
   );
 };

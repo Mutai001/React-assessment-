@@ -1,0 +1,41 @@
+@import './variables.scss';
+.todo-app {
+    background: $todo-bg;
+    padding: 2rem;
+    border-radius: 5px;
+    box-shadow: 0 35px 50px -15px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        padding: 1rem;
+        background: $footer-bg;
+        border-radius: 5px;
+        .filters {
+            display: flex;
+            button {
+                margin: 0 0.5rem;
+                background: none;
+                border: none;
+                color: white;
+                cursor: pointer;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+        button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
