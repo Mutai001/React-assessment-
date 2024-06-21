@@ -1,0 +1,60 @@
+@import './variables';
+.app {
+    text-align: center;
+    background: url('./images/bg-desktop-dark.jpg');
+    // no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: $text-color;
+    .app-header {
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .new-todo {
+            display: flex;
+            align-items: center;
+            input {
+                padding: 0.5rem;
+                font-size: 1rem;
+                margin-right: 0.5rem;
+                background-color: $input-bg-color;
+                color: $input-text-color;
+                border: 1px solid $border-color;
+            }
+            button {
+                padding: 0.5rem 1rem;
+                font-size: 1rem;
+                cursor: pointer;
+                background-color: $button-bg-color;
+                color: $button-text-color;
+                border: none;
+            }
+        }
+    }
+}
+
+.todo-list {
+    width: 300px;
+    .todo-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        .completed {
+            text-decoration: line-through;
+            color: $completed-text-color;
+        }
+        button {
+            background: none;
+            border: none;
+            color: red;
+            cursor: pointer;
+        }
+    }
+}

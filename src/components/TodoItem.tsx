@@ -1,19 +1,24 @@
 import React from 'react';
-import './styles/TodoItem.scss';
+import { Todo } from '../types';
+import iconCheck from '../images/icon-check.svg';
+import iconCross from '../images/icon-cross.svg';
 
 interface Props {
-  todo: {
-    text: string;
-    completed: boolean;
-  };
-  toggleTodo: () => void;
+  todo: Todo;
+  onToggle: () => void;
+  onDelete: () => void;
 }
 
-const TodoItem: React.FC<Props> = ({ todo, toggleTodo }) => {
+const TodoItem: React.FC<Props> = ({ todo, onToggle, onDelete }) => {
   return (
-    <div className={`todo-item ${todo.completed ? 'completed' : ''}`} onClick={toggleTodo}>
-      <input type="checkbox" checked={todo.completed} readOnly />
-      <span>{todo.text}</span>
+    <div className="todo-item">
+      <div className="todo-check" onClick={onToggle}>
+        <img src={iconCheck} alt="check icon" className={todo.completed ? 'checked' : ''} />
+      </div>
+      <span className={todo.completed ? 'completed' : ''}>{todo.text}</span>
+      <button onClick={onDelete}>
+        <img src={iconCross} alt="delete icon" />
+      </button>
     </div>
   );
 };
