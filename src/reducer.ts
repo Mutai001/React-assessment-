@@ -15,7 +15,7 @@ export const initialState: State = {
   ],
 };
 
-const reducer = (state: State, action: Action): State => {
+const reducer = (state: State, action: Action | { type: 'CLEAR_COMPLETED' | 'SET_TODOS', payload?: any }): State => {
   switch (action.type) {
     case 'ADD_TODO':
       return {
@@ -38,6 +38,16 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         todos: state.todos.filter(todo => todo.id !== action.payload)
+      };
+    case 'CLEAR_COMPLETED':
+      return {
+        ...state,
+        todos: state.todos.filter(todo => !todo.completed)
+      };
+    case 'SET_TODOS':
+      return {
+        ...state,
+        todos: action.payload
       };
     default:
       return state;
