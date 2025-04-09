@@ -14,7 +14,8 @@ export const initialState: State = {
   todos: []
 };
 
-type Action =
+// Make the Action type exportable
+export type Action =
   | { type: 'ADD_TODO'; payload: string }
   | { type: 'TOGGLE_TODO'; payload: string }
   | { type: 'DELETE_TODO'; payload: string }

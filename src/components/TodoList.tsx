@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { Trash2, Edit, Check, X } from 'lucide-react';
-
-interface Todo {
-  id: string;
-  text: string;
-  completed: boolean;
-}
+import { Action, Todo } from '../reducer'; // Import Todo and Action types from reducer
 
 interface TodoListProps {
   todos: Todo[];
-  dispatch: React.Dispatch<unknown>;
+  dispatch: React.Dispatch<Action>; // Explicitly typed as Dispatch<Action>
   onClearCompleted: () => void;
 }
 
