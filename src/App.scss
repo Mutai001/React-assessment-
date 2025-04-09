@@ -1,107 +1,496 @@
 @import './variables';
-.app {
-    text-align: center;
-    background: url('./images/bg-desktop-dark.jpg') no-repeat top center;
-    // background-size: cover;
-    background-color: $background-color;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    color: $text-color;
-    padding-top: 100px;
-    .app-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 80%;
-        max-width: 800px;
-        h1 {
-            font-size: 2rem;
-        }
-        .theme-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-        .new-todo {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            margin-top: 20px;
-            input {
-                padding: 0.5rem;
-                font-size: 1rem;
-                margin-right: 0.5rem;
-                width: 100%;
-                background-color: $input-bg-color;
-                color: $input-text-color;
-                border: 1px solid $border-color;
-            }
-            button {
-                padding: 0.5rem 1rem;
-                font-size: 1rem;
-                cursor: pointer;
-                background-color: $button-bg-color;
-                color: $button-text-color;
-                border: none;
-            }
-        }
-    }
+
+// Custom properties for both themes
+:root {
+  --primary-gradient: linear-gradient(135deg, #6e8efb, #a777e3);
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --animation-speed: 0.3s;
 }
 
-.todo-list {
-    width: 80%;
-    max-width: 800px;
-    margin-top: 20px;
+// Dark theme variables
+body.dark {
+  --background-color: #181824;
+  --card-bg: #25273c;
+  --text-color: #cacde8;
+  --input-bg-color: #25273c;
+  --input-text-color: #cacde8;
+  --button-bg-color: #6e8efb;
+  --button-text-color: #ffffff;
+  --border-color: #393a4c;
+  --completed-text-color: #777a92;
+  --hover-color: #e4e5f1;
+  --box-shadow: 0 35px 50px -15px rgba(0, 0, 0, 0.5);
+}
+
+// Light theme variables
+body.light {
+  --background-color: #f2f2f2;
+  --card-bg: #ffffff;
+  --text-color: #484b6a;
+  --input-bg-color: #ffffff;
+  --input-text-color: #484b6a;
+  --button-bg-color: #6e8efb;
+  --button-text-color: #ffffff;
+  --border-color: #e4e5f1;
+  --completed-text-color: #d2d3db;
+  --hover-color: #484b6a;
+  --box-shadow: 0 35px 50px -15px rgba(194, 195, 214, 0.5);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: background-color var(--animation-speed), color var(--animation-speed);
+}
+
+body {
+  font-family: 'Josefin Sans', sans-serif;
+  background-color: var(--background-color);
+}
+
+.app {
+  text-align: center;
+  background: url('./images/bg-desktop-dark.jpg') no-repeat top center;
+  background-color: var(--background-color);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  color: var(--text-color);
+  padding-top: 80px;
+  padding-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+  transition: background-color var(--animation-speed);
+  
+  &.light {
+    background: url('./images/bg-desktop-light.jpg') no-repeat top center;
+  }
+  
+  .particles-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+    
+    .particle {
+      position: absolute;
+      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+      border-radius: 50%;
+      width: 12px;
+      height: 12px;
+      opacity: 0;
+      animation: float 15s infinite;
+      
+      @for $i from 1 through 15 {
+        &:nth-child(#{$i}) {
+          left: random(100) * 1%;
+          top: random(100) * 1%;
+          animation-delay: random(5) * 1s;
+          animation-duration: (random(10) + 10) * 1s;
+          transform: scale(random(5) * 0.2 + 0.5);
+        }
+      }
+    }
+  }
+  
+  .app-header {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    max-width: 550px;
+    z-index: 1;
+    
+    .title-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      
+      h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        letter-spacing: 12px;
+        color: white;
+        display: flex;
+        align-items: center;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        
+        .sparkle-icon {
+          margin-right: 8px;
+          color: gold;
+          animation: twinkle 3s ease-in-out infinite;
+        }
+      }
+      
+      .theme-toggle {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: white;
+        transition: transform var(--animation-speed);
+        
+        &:hover {
+          transform: rotate(30deg);
+        }
+      }
+    }
+    
+    .new-todo {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      background-color: var(--card-bg);
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 24px;
+      box-shadow: var(--box-shadow);
+      transition: transform var(--animation-speed), box-shadow var(--animation-speed);
+      
+      &.focused {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(110, 142, 251, 0.4);
+      }
+      
+      input {
+        padding: 0.8rem;
+        font-size: 1.1rem;
+        font-family: inherit;
+        width: 100%;
+        background-color: transparent;
+        color: var(--input-text-color);
+        border: none;
+        outline: none;
+      }
+      
+      .add-button {
+        padding: 10px;
+        border-radius: 50%;
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s, box-shadow 0.2s;
+        
+        &:hover {
+          transform: scale(1.1);
+          box-shadow: 0 0 15px rgba(110, 142, 251, 0.7);
+        }
+      }
+    }
+  }
+  
+  .complete-animation {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4caf50;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    animation: slideDown 0.3s forwards, fadeOut 0.3s 1.2s forwards;
+  }
+  
+  .todo-list {
+    width: 90%;
+    max-width: 550px;
+    background-color: var(--card-bg);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: var(--box-shadow);
+    z-index: 1;
+    
     .todo-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: grab;
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+      }
+      
+      .todo-content {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        .completed {
-            text-decoration: line-through;
-            color: $completed-text-color;
-        }
-        button {
-            background: none;
-            border: none;
-            color: red;
+        gap: 16px;
+        width: 100%;
+        
+        .checkbox-container {
+          position: relative;
+          width: 24px;
+          height: 24px;
+          
+          input[type="checkbox"] {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
             cursor: pointer;
-        }
-    }
-    .footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
-        font-size: 0.9rem;
-        color: $text-color;
-        .filters {
-            display: flex;
-            gap: 10px;
-            button {
-                background: none;
-                border: none;
-                color: $text-color;
-                cursor: pointer;
-                &.active {
-                    font-weight: bold;
-                }
+            z-index: 2;
+          }
+          
+          .checkbox {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            transition: all 0.2s;
+          }
+          
+          input[type="checkbox"]:checked + .checkbox {
+            background: var(--primary-gradient);
+            border: none;
+            
+            &::after {
+              content: "✓";
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              color: white;
+              font-size: 14px;
             }
+          }
         }
-        .clear-completed {
-            background: none;
-            border: none;
-            color: $text-color;
-            cursor: pointer;
+        
+        .todo-text {
+          font-size: 1.1rem;
+          text-align: left;
+          transition: color 0.2s, text-decoration 0.2s;
+          
+          &.completed {
+            text-decoration: line-through;
+            color: var(--completed-text-color);
+          }
         }
+      }
+      
+      .action-buttons {
+        display: flex;
+        gap: 12px;
+        
+        button {
+          background: none;
+          border: none;
+          cursor: pointer;
+          opacity: 0.6;
+          transition: opacity 0.2s, transform 0.2s;
+          
+          &:hover {
+            opacity: 1;
+            transform: scale(1.2);
+          }
+          
+          &.delete-button {
+            color: #ff5c5c;
+          }
+          
+          &.edit-button {
+            color: #5c8aff;
+          }
+        }
+      }
     }
-    .drag-and-drop {
-        text-align: center;
-        color: $text-color;
-        margin-top: 20px;
+    
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      font-size: 0.9rem;
+      color: var(--completed-text-color);
+      
+      .items-left {
+        font-weight: 500;
+      }
+      
+      .filters {
+        display: flex;
+        gap: 15px;
+        
+        button {
+          background: none;
+          border: none;
+          color: var(--completed-text-color);
+          cursor: pointer;
+          font-weight: 700;
+          transition: color 0.2s;
+          
+          &:hover {
+            color: var(--hover-color);
+          }
+          
+          &.active {
+            color: #6e8efb;
+          }
+        }
+      }
+      
+      .clear-completed {
+        background: none;
+        border: none;
+        color: var(--completed-text-color);
+        cursor: pointer;
+        font-weight: 500;
+        transition: color 0.2s;
+        
+        &:hover {
+          color: var(--hover-color);
+        }
+      }
     }
+  }
+  
+  .drag-and-drop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--completed-text-color);
+    font-size: 0.9rem;
+    margin-bottom: 40px;
+    gap: 8px;
+    z-index: 1;
+    
+    .drag-icon {
+      font-size: 1.2rem;
+      animation: moveUpDown 2s infinite;
+    }
+  }
+  
+  .app-footer {
+    margin-top: auto;
+    width: 90%;
+    max-width: 550px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--completed-text-color);
+    z-index: 1;
+    
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      
+      span {
+        background-color: var(--card-bg);
+        padding: 10px 15px;
+        border-radius: 20px;
+        box-shadow: var(--box-shadow);
+      }
+    }
+    
+    .credits {
+      margin-top: 12px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding-top: 50px;
+    
+    .app-header {
+      width: 95%;
+      
+      .title-container h1 {
+        font-size: 1.8rem;
+        letter-spacing: 8px;
+      }
+    }
+    
+    .todo-list {
+      width: 95%;
+      
+      .footer {
+        flex-wrap: wrap;
+        
+        .filters {
+          order: 3;
+          width: 100%;
+          justify-content: center;
+          margin-top: 15px;
+        }
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes moveUpDown {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
