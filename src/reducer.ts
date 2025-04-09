@@ -1,54 +1,74 @@
-import { Todo, Action } from './types';
+import { v4 as uuidv4 } from 'uuid';
 
-interface State {
+export interface Todo {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
+export interface State {
   todos: Todo[];
 }
 
 export const initialState: State = {
-  todos: [
-    { id: 1, text: 'Complete online JavaScript course', completed: true },
-    { id: 2, text: 'Jog around the park 3x', completed: false },
-    { id: 3, text: '10 minutes meditation', completed: false },
-    { id: 4, text: 'Read for 1 hour', completed: false },
-    { id: 5, text: 'Pick up groceries', completed: false },
-    { id: 6, text: 'Complete Todo App on Frontend Mentor', completed: false }
-  ],
+  todos: []
 };
 
-const reducer = (state: State, action: Action | { type: 'CLEAR_COMPLETED' | 'SET_TODOS', payload?: any }): State => {
+type Action =
+  | { type: 'ADD_TODO'; payload: string }
+  | { type: 'TOGGLE_TODO'; payload: string }
+  | { type: 'DELETE_TODO'; payload: string }
+  | { type: 'CLEAR_COMPLETED' }
+  | { type: 'SET_TODOS'; payload: Todo[] }
+  | { type: 'EDIT_TODO'; payload: { id: string; text: string } };
+
+const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'ADD_TODO':
       return {
-        ...state,
         todos: [
           ...state.todos,
-          { id: Date.now(), text: action.payload, completed: false }
-        ]
+          {
+            id: uuidv4(),
+            text: action.payload,
+            completed: false,
+          },
+        ],
       };
+      
     case 'TOGGLE_TODO':
       return {
-        ...state,
-        todos: state.todos.map(todo =>
+        todos: state.todos.map((todo) =>
           todo.id === action.payload
             ? { ...todo, completed: !todo.completed }
             : todo
-        )
+        ),
       };
+      
     case 'DELETE_TODO':
       return {
-        ...state,
-        todos: state.todos.filter(todo => todo.id !== action.payload)
+        todos: state.todos.filter((todo) => todo.id !== action.payload),
       };
+      
     case 'CLEAR_COMPLETED':
       return {
-        ...state,
-        todos: state.todos.filter(todo => !todo.completed)
+        todos: state.todos.filter((todo) => !todo.completed),
       };
+      
     case 'SET_TODOS':
       return {
-        ...state,
-        todos: action.payload
+        todos: action.payload,
       };
+      
+    case 'EDIT_TODO':
+      return {
+        todos: state.todos.map((todo) =>
+          todo.id === action.payload.id
+            ? { ...todo, text: action.payload.text }
+            : todo
+        ),
+      };
+      
     default:
       return state;
   }
